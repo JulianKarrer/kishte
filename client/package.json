@@ -1,0 +1,21 @@
+{
+    "name": "kishte",
+    "version": "1.0.0",
+    "author": "",
+    "description": "MIDI Controller UI",
+    "main": "main.js",
+    "scripts": {
+        "start": "electron ."
+    },
+    "keywords": [],
+    "license": "MIT",
+    "devDependencies": {
+        "electron": "^12.0.2",
+        "electron-rebuild": "^2.3.5"
+    },
+    "dependencies": {
+        "@serialport/parser-readline": "^9.0.7",
+        "easymidi": "^2.0.3",
+        "serialport": "^9.0.7"
+    }
+}

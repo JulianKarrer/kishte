@@ -1,0 +1,128 @@
+@font-face {
+    font-family: 'RobotoMono';
+    src: url('./resources/RobotoMono-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'RobotoMonoLight';
+    src: url('./resources/RobotoMono-ExtraLight.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+h1{
+    font-family: RobotoMono;
+    color:#FAFAFA;
+}
+
+body{
+    background: #212121;
+    margin: 30px;
+    -webkit-app-region: drag;
+    overflow: hidden;
+}
+#topWrapper{
+    display: flex;
+    align-items: center;
+    height: 100px;
+    overflow: visible;
+}
+#connectionIndicator{
+    margin: 20px;
+    margin-right: 50px;
+    width: 20px;
+    min-width: 20px;
+    height: 20px;
+
+    background: white;
+    border-radius: 50%;
+}
+.selector{
+    -webkit-app-region: no-drag;
+    max-height: 36px;
+    padding: 4px;
+    background: #EEEEEE;
+    font-family: RobotoMonoLight;
+    color:#212121;
+}
+#gobutton{
+    -webkit-app-region: no-drag;
+    border: none;
+    font-family: 'RobotoMonoLight';
+    font-size: 16pt;
+    padding: 4px;
+    color: #F5F5F5;
+    background-color: #424242;
+    text-align: center;
+    min-width: 107px;
+
+    cursor: pointer;
+    transition: background-color 300ms ease;
+}
+#gobutton:hover{
+    background-color: #757575;
+}
+#log{
+    -webkit-app-region: no-drag;
+    flex-direction: column-reverse;
+    overflow-y: scroll;
+    height: 200px;
+    color: white;
+    font-family: 'RobotoMonoLight';
+    font-size: 10pt;
+        width: 130px;
+    display: flex;
+    background: #424242;
+    padding-bottom: 13px;
+}
+/*
+    console scroll bar styling
+    https://css-tricks.com/the-current-state-of-styling-scrollbars/
+*/
+html {
+  --scrollbarBG: #E0E0E0;
+  --thumbBG: #757575;
+}
+#log::-webkit-scrollbar {
+  width: 11px;
+}
+#log {
+  scrollbar-width: thin;
+  scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+}
+#log::-webkit-scrollbar-track {
+  background: var(--scrollbarBG);
+}
+#log::-webkit-scrollbar-thumb {
+  background-color: var(--thumbBG) ;
+  border-radius: 6px;
+  border: 3px solid var(--scrollbarBG);
+}
+
+#waveform{
+    margin: auto;
+    transform: translateY(-33%);
+}
+
+.uicon{
+    -webkit-app-region: no-drag;
+    width: 20px;
+    position: fixed;
+    top: 0;
+    right: 0;
+    margin: 10px;
+    filter: invert(1);
+    cursor: pointer;
+
+    border-radius: 50%;
+    transition: background-color 300ms ease;
+}
+.uicon:hover{
+    background-color: #424242;
+}
+#minimize{
+    right: 30px;
+}
