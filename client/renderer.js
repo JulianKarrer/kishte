@@ -18,6 +18,9 @@ window.addEventListener("DOMContentLoaded", ()=>{
     document.getElementById("serialSelect").addEventListener("change", (e)=> {
         ipcRenderer.invoke('setPort', document.getElementById("serialSelect").value)
     })
+    document.getElementById("colourSlider").addEventListener("input", (e)=> {
+        ipcRenderer.send('setColour', document.getElementById("colourSlider").value)
+    })
     document.getElementById("quit").addEventListener("click", (e)=>{
         ipcRenderer.send('app:quit')
     })
@@ -77,6 +80,13 @@ const connectionColours = {
 }
 ipcRenderer.on('getConnection_reply', (event, reply) => {
     document.getElementById("connectionIndicator").style.background = connectionColours[reply];
+})
+
+    //COLOUR SLIDER
+ipcRenderer.on('setColour_reply', (event, reply) => {
+    Array.from(document.styleSheets[0].cssRules).filter(
+        rule => rule.cssText.includes("#colourSlider::-webkit-slider-thumb")
+    )[0].style.background = reply;
 })
 
     //LOG

@@ -29,4 +29,6 @@ class Graphics
       void getEnvelope();
 };
 
+extern uint32_t mainColour;
+
 #endif

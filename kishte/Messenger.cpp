@@ -1,5 +1,6 @@
 #include "Messenger.h"
 #include "BluetoothSerial.h"
+#include "Graphics.h"
 BluetoothSerial SerialBT;
 
 void messengerInit()
@@ -29,16 +30,54 @@ void sendMIDI(byte command, byte data1, byte data2)
 int16_t btBuffer[240] = {50};
 int16_t btPointer = 0;
 
+unsigned char setColourBuffer[2] = {0};
+int16_t bytesToAccept = 0;
+
+int16_t state = 0;
+
 void updateBtBuffer(){
     while (SerialBT.available()) {
         int16_t newReading = (int16_t) SerialBT.read();
-        //look for flag bytes sent from client
-        if (newReading == 200){ btPointer = 0;} //flag byte 200 => new waveform, reset btPointer
-        else{
-            //if no flag byte is found, handle data
-            insertUntilFull(newReading);
-            // shiftInsert();
-            // circularInsert((int16_t) SerialBT.read());
+
+        switch (state){
+
+             //default state, accept waveform data and flag bytes
+
+            case 0:
+                switch(newReading) {    //look for flag bytes sent from client
+                    case 200:    //flag byte 200 => new waveform data, reset btPointer
+                        btPointer = 0;
+                        break;
+                    case 201:   //flag byte 201 => set colour, next two bytes are colour
+                        bytesToAccept = 2;
+                        state = 1;
+                        break;
+                    default:
+                        //if no flag byte is found, incoming data is pushed to the draw buffer
+                        insertUntilFull(newReading);
+                        // shiftInsert(newReading);
+                        // circularInsert(newReading);
+                }
+                break;
+
+            //handle data made up of known-length byte sequences
+
+            case 1: //accept 2 bytes for setColour
+                switch(bytesToAccept){
+                    case 2:
+                        setColourBuffer[0] = (unsigned char) newReading;
+                        bytesToAccept --;
+                        break;
+                    case 1:
+                        setColourBuffer[1] = (unsigned char) newReading;
+                        mainColour = (((uint32_t)(setColourBuffer[0]) << 8) | ((uint32_t)(setColourBuffer[1]) << 0));
+                        bytesToAccept = 0;
+                        state = 0;
+                        break;
+                }
+                break;
+
+
         }
     }
 };

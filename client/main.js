@@ -108,11 +108,11 @@ async function connect(){
     }
 }
 
-const NEW_DATA_FLAG = new Uint8Array([200]);
 //write waveform to the serial port
+const NEW_DATA_FLAG = new Uint8Array([200]);
 ipcMain.handle('writeData', (event, arg) => {
     if(port != null){
-        writeToPort(NEW_DATA_FLAG) //write 240 bytes of data for 240 pixels
+        writeToPort(NEW_DATA_FLAG) //send flag byte
         writeToPort(preProcessWaveform(arg)) //write 240 bytes of data for 240 pixels
     }
 })
@@ -130,15 +130,55 @@ function preProcessWaveform(data){
 }
 
 function writeToPort(data){
-    try {
-        port.write(data, function(err) {
-            if (err) {
-                uiLog("FAILED TO WRITE " + tryport)
-                setConnection("disconnected",tryport)
-            }
-        })
-    } catch (e) {console.log(e)}
+    if(port != null){
+        try {
+            port.write(data, function(err) {
+                if (err) {
+                    uiLog("FAILED TO WRITE " + portname)
+                    setConnection("disconnected",portname)
+                }
+            })
+        } catch (e) {console.log(e)}
+    }
 }
+
+//manage colour slider
+const SET_COLOUR_FLAG = new Uint8Array([201]);
+function hslToHex(h, s, l) {
+  l /= 100;
+  const a = s * Math.min(l, 1 - l) / 100;
+  const f = n => {
+    const k = (n + h / 30) % 12;
+    const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+    return Math.round(255 * color).toString(16).padStart(2, '0');
+  };
+  return `#${f(0)}${f(8)}${f(4)}`;
+}
+
+function rgb24ToRgb16(input) {
+    let rgb24 = parseInt(input.replace(/^#/, ''), 16);
+    let r = (rgb24 & 0xFF0000) >> 16;
+    let g = (rgb24 & 0xFF00) >> 8;
+    let b = rgb24 & 0xFF;
+
+    r = (r * 249 + 1014) >> 11;
+    g = (g * 253 + 505) >> 10;
+    b = (b * 249 + 1014) >> 11;
+    let rgb16 = 0;
+    rgb16 = rgb16 | (r << 11);
+    rgb16 = rgb16 | (g << 5);
+    rgb16 = rgb16 | b;
+
+    return new Uint8Array(rgb16.toString(16).match(/(..?)/g).map(b => parseInt(b,16)));
+}
+
+ipcMain.on('setColour', (event, arg) => {
+    let reply = arg=="0" ? "#ffffff" : hslToHex(parseInt(arg), 80, 60);
+    writeToPort(SET_COLOUR_FLAG);
+    writeToPort(rgb24ToRgb16(reply));
+    event.sender.send('setColour_reply', reply)
+})
+
 
 //manage possible midi outputs
 const midiout = new midi.Output("LoopBe Internal MIDI 1");

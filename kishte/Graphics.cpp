@@ -16,7 +16,7 @@ TFT_eSPI tft = TFT_eSPI();
 
 #define BLACK 0x0000
 #define WHITE 0xFFFF
-
+uint32_t mainColour = WHITE;
 
 
     //  PUBLIC METHODS
@@ -59,7 +59,7 @@ void Graphics::drawCentred(bool bt){
         int16_t b = bt ? (btBuffer[i]==0?1:btBuffer[i]) : (buffer[i]==0?1:buffer[i]);
         int16_t rim = (h-b)/2;
         tft.drawFastVLine(i, 0, rim, BLACK);
-        tft.drawFastVLine(i, rim, b, WHITE);
+        tft.drawFastVLine(i, rim, b, mainColour);
         tft.drawFastVLine(i, h-rim, rim, BLACK);
     }
 }

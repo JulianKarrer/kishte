@@ -11,20 +11,26 @@
     <img class="uicon" src="./resources/exit.svg" alt="Exit application" id="quit"/>
     <img class="uicon" src="./resources/minimize.svg" alt="Minimize application" id="minimize"/>
 
-    <div id="topWrapper">
-        <h1 id="header">KISTHE</h1>
-        <div id="connectionIndicator"></div>
-        <canvas id="waveform" width="300" height="300"></canvas>
+    <div id="wrapper">
+        <div class="column">
+            <div id="topWrapper">
+                <h1 id="header">KISTHE</h1>
+                <div id="connectionIndicator"></div>
+            </div>
+
+            <div style="display: flex">
+                <select id="serialSelect"  class="selector" size=1></select>
+                <input type="button" alt="connect" id="gobutton" value="CONNECT"/>
+            </div>
+
+            <ul id="log"></ul>
+            <select id="midiSelect" class="selector" size=1></select>
+        </div>
+        <div class="column">
+            <canvas id="waveform" width="300" height="100"></canvas>
+            <input type="range" min="0" max="360" value="0" id="colourSlider">
+        </div>
     </div>
-
-    <div style="display: flex;">
-        <select id="serialSelect"  class="selector" size=1></select>
-        <input type="button" alt="connect" id="gobutton" value="CONNECT"/>
-    </div>
-
-    <ul id="log"></ul>
-    <select id="midiSelect" class="selector" size=1></select>
-
 
 
 <script type="text/javascript">

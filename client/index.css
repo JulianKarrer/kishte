@@ -1,3 +1,6 @@
+
+    /* GENERAL */
+
 @font-face {
     font-family: 'RobotoMono';
     src: url('./resources/RobotoMono-Regular.woff') format('woff');
@@ -20,10 +23,41 @@ h1{
 
 body{
     background: #212121;
-    margin: 30px;
     -webkit-app-region: drag;
     overflow: hidden;
 }
+#wrapper{
+    display: flex;
+}
+.column{
+    margin: 30px;
+    max-width: 300px;
+}
+
+    /* WINDOW UI */
+
+.uicon{
+    -webkit-app-region: no-drag;
+    width: 20px;
+    position: fixed;
+    top: 0;
+    right: 0;
+    margin: 10px;
+    filter: invert(1);
+    cursor: pointer;
+
+    border-radius: 50%;
+    transition: background-color 300ms ease;
+}
+.uicon:hover{
+    background-color: #424242;
+}
+#minimize{
+    right: 30px;
+}
+
+    /* FIRST COLUMN */
+
 #topWrapper{
     display: flex;
     align-items: center;
@@ -79,8 +113,8 @@ body{
     padding-bottom: 13px;
 }
 /*
-    console scroll bar styling
-    https://css-tricks.com/the-current-state-of-styling-scrollbars/
+console scroll bar styling
+https://css-tricks.com/the-current-state-of-styling-scrollbars/
 */
 html {
   --scrollbarBG: #E0E0E0;
@@ -102,27 +136,28 @@ html {
   border: 3px solid var(--scrollbarBG);
 }
 
+    /* SECOND COLUMN */
+
 #waveform{
     margin: auto;
-    transform: translateY(-33%);
+    width: 100%
 }
-
-.uicon{
+#colourSlider{
     -webkit-app-region: no-drag;
-    width: 20px;
-    position: fixed;
-    top: 0;
-    right: 0;
-    margin: 10px;
-    filter: invert(1);
+    -webkit-appearance: none;
+    outline: medium;
+    margin: 15px 0 15px 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(to right,hsl(0,100%,50%),hsl(60,100%,50%),hsl(120,100%,50%),hsl(180,100%,50%),hsl(240,100%,50%),hsl(300,100%,50%),hsl(360,100%,50%));
+}
+#colourSlider::-webkit-slider-thumb {
+    -webkit-app-region: no-drag;
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px;
+    border-radius: 2px;
+    height: 28px;
+    background: white;
     cursor: pointer;
-
-    border-radius: 50%;
-    transition: background-color 300ms ease;
-}
-.uicon:hover{
-    background-color: #424242;
-}
-#minimize{
-    right: 30px;
 }
