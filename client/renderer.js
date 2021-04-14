@@ -18,6 +18,9 @@ window.addEventListener("DOMContentLoaded", ()=>{
     document.getElementById("serialSelect").addEventListener("change", (e)=> {
         ipcRenderer.invoke('setPort', document.getElementById("serialSelect").value)
     })
+    document.getElementById("drawStyleSelect").addEventListener("change", (e)=> {
+        ipcRenderer.invoke('setDrawStyle', document.getElementById("drawStyleSelect").value)
+    })
     document.getElementById("colourSlider").addEventListener("input", (e)=> {
         ipcRenderer.send('setColour', document.getElementById("colourSlider").value)
     })
@@ -34,41 +37,40 @@ window.addEventListener("DOMContentLoaded", ()=>{
 
     //PORT SETTINGS
 
-ipcRenderer.on('getPorts_reply', (event, reply) => {
-    const selector = document.getElementById("serialSelect")
+function updatePortSelector(selector, reply, setCmd){
     //get current options
     let currentOptions = [];
     for (var option of selector.options) {
         currentOptions.push(option.innerText)
     }
 
+    //loop through currently available ports, add missing options
+    let currentPorts = []
     for (var port of reply) {
-        var option = document.createElement("option");
-        option.text = port.path;
-        if(!currentOptions.includes(port.path)){
+        currentPorts.push(port)
+        if(!currentOptions.includes(port)){
+            var option = document.createElement("option");
+            option.text = port;
             selector.add(option);
         }
     }
-    ipcRenderer.invoke('setPort', selector.value)
+    //loop through options again, removing unavailable ports
+    for (var i=0; i<selector.length; i++) {
+        if (!currentPorts.includes(selector.options[i].value)){
+            selector.remove(i);
+        }
+    }
+
+    ipcRenderer.invoke(setCmd, selector.value)
+}
+
+ipcRenderer.on('getPorts_reply', (event, reply) => {
+    updatePortSelector( document.getElementById("serialSelect"), reply, "setPort");
 })
 
     //MIDI SETTINGS
 ipcRenderer.on('getMidiOuts_reply', (event, reply) => {
-    const selector = document.getElementById("midiSelect")
-    //get current options
-    let currentOptions = [];
-    for (var option of document.getElementById("midiSelect").options) {
-        currentOptions.push(option.innerText)
-    }
-
-    for (var port of reply) {
-        var option = document.createElement("option");
-        option.text = port;
-        if(!currentOptions.includes(port)){
-            selector.add(option);
-        }
-    }
-    ipcRenderer.invoke('setMidi', document.getElementById("midiSelect").value)
+    updatePortSelector( document.getElementById("midiSelect"), reply, "setMidi");
 })
 
     //CONNECTION STATUS
@@ -99,6 +101,7 @@ ipcRenderer.on('retrieveLog_reply', (event, reply) => {
 
     //CAPTURE AUDIO
 async function startAudioCapture(){
+
     const { desktopCapturer } = require('electron')
     desktopCapturer.getSources({ types: ['window', 'screen'] }).then(async sources => {
       for (const source of sources) {
@@ -118,7 +121,7 @@ async function startAudioCapture(){
                   }
                 }
             })
-            handleStream(stream)
+            startDrawing(stream)
         } catch (e) {console.log}
         }
       }
@@ -128,34 +131,79 @@ async function startAudioCapture(){
     var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     var analyser = audioCtx.createAnalyser();
     analyser.fftSize = 512;
-    var bufferLength = analyser.frequencyBinCount;
-    var dataArray = new Uint8Array(bufferLength);
+    var fftSize = analyser.frequencyBinCount;
 
-    function handleStream (stream) {
+    var dataArray = new Uint8Array(fftSize);
+    var fftArray = new Uint8Array(fftSize);
+
+
+    function startDrawing (stream) {
         //pipe captured audio into the analyser and start drawing
         var source = new MediaStreamAudioSourceNode(audioCtx, {mediaStream:stream});
         source.connect(analyser);
         requestAnimationFrame(draw);
+        setInterval(()=>{ipcRenderer.invoke('writeData', toDraw);}, 40) //send drawBuffer to KISHTE every 40ms
     }
 
+    //prepare envelope follower using the normalozed average of the array for each frame
+    var rawEnvelopeArray = new Uint8Array(fftSize);    //fft Array => loudness graph
+    var envelopeArray = new Uint8Array(fftSize);
 
-    //waveform visualization
+    var rawWaveFollower = new Uint8Array(fftSize);    //data array => wave follower
+    var waveFollower = new Uint8Array(fftSize);
+    function updateEnvelope(inArray, rawArray, outArray){
+        //shift the buffer
+        for (var i = 0; i < fftSize-1; i++) {
+            rawArray[i] = rawArray[i+1]
+        }
+        //add new average to buffer
+        rawArray[fftSize-1] = Math.floor(inArray.reduce((a,b) => a + b, 0) / fftSize);
+        //normalize the envelope from the raw average values
+        outArray = rawArray.map(num => Math.floor(num / Math.max(...rawArray) * 255))
+        return [inArray, rawArray, outArray]
+    }
+
+    //visualization
     const canvas = document.getElementById("waveform");
     const canvasCtx = canvas.getContext("2d");
+    const selector = document.getElementById("visualizerSelect");
+    let toDraw;
     function draw(){
         analyser.getByteTimeDomainData(dataArray);
-        ipcRenderer.invoke('writeData', dataArray);
+        analyser.getByteFrequencyData(fftArray);
+        [dataArray, rawWaveFollower, waveFollower] = updateEnvelope(dataArray, rawWaveFollower, waveFollower);
+        [fftArray, rawEnvelopeArray, envelopeArray] = updateEnvelope(fftArray, rawEnvelopeArray, envelopeArray);
+
+        //decide what to draw
+        switch(selector.value) {
+            case "waveform":
+                toDraw = dataArray;
+                break;
+            case "fourier":
+                toDraw = fftArray;
+                break;
+            case "level":
+                toDraw = envelopeArray;
+                break;
+            case "wavefollower":
+                toDraw = waveFollower;
+                break;
+        }
+
+
+
         canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
         canvasCtx.lineWidth = 2;
         canvasCtx.strokeStyle = 'rgb(0, 0, 0)';
 
         canvasCtx.beginPath();
 
-        const sliceWidth = canvas.width * 1.0 / bufferLength;
+        const sliceWidth = canvas.width * 1.0 / fftSize;
         var x = 0;
-        for(var i = 0; i < bufferLength; i++) {
-               var v = dataArray[i] / 128.0;
+        for(var i = 0; i < fftSize; i++) {
+               var v = toDraw[i] / 128.0;
                var y = v * (canvas.height)/2;
+               y = canvas.height - y;
                if(i === 0) {canvasCtx.moveTo(x, (canvas.height)/2);}
                else {canvasCtx.lineTo(x, y);}
                x += sliceWidth;

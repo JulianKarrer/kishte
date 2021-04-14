@@ -18,7 +18,7 @@
                 <div id="connectionIndicator"></div>
             </div>
 
-            <div style="display: flex">
+            <div id="connectionWrapper">
                 <select id="serialSelect"  class="selector" size=1></select>
                 <input type="button" alt="connect" id="gobutton" value="CONNECT"/>
             </div>
@@ -29,6 +29,17 @@
         <div class="column">
             <canvas id="waveform" width="300" height="100"></canvas>
             <input type="range" min="0" max="360" value="0" id="colourSlider">
+            <select id="visualizerSelect"  class="selector" size=1>
+                 <option value="waveform">Waveform</option>
+                 <option value="fourier">Fourier</option>
+                 <option value="level">Level</option>
+                 <option value="wavefollower">Follower</option>
+            </select>
+            <select id="drawStyleSelect"  class="selector" size=1>
+                 <option value="line">Line</option>
+                 <option value="centred">Centred</option>
+                 <option value="bar">Bar</option>
+            </select>
         </div>
     </div>
 

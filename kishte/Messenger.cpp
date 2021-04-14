@@ -52,6 +52,16 @@ void updateBtBuffer(){
                         bytesToAccept = 2;
                         state = 1;
                         break;
+                    case 202:   //flag byte 202 => set drawMethod to drawLine
+                        drawMethod = 0;
+                        break;
+                    case 203:   //flag byte 203 => set drawMethod to drawCentred
+                        drawMethod = 1;
+                        break;
+                    case 204:   //flag byte 204 => set drawMethod to drawBars
+                        drawMethod = 2;
+                        break;
+
                     default:
                         //if no flag byte is found, incoming data is pushed to the draw buffer
                         insertUntilFull(newReading);

@@ -16,8 +16,9 @@ TFT_eSPI tft = TFT_eSPI();
 
 #define BLACK 0x0000
 #define WHITE 0xFFFF
-uint32_t mainColour = WHITE;
 
+uint32_t mainColour = WHITE;
+uint16_t drawMethod = 0;
 
     //  PUBLIC METHODS
 
@@ -37,11 +38,21 @@ void Graphics::init() {
 }
 
 void Graphics::update() {
-  //getEnvelope();  //gets audio signal by analog-reading the micIn pin
-  if (fc%draw_every==0){
-    drawCentred(true);
-  }
-  fc++;
+    //getEnvelope();  //gets audio signal by analog-reading the micIn pin
+    if (fc%draw_every==0){
+        switch (drawMethod) {
+            case 0:
+                drawLine(true);
+                break;
+            case 1:
+                drawCentred(true);
+                break;
+            case 2:
+                drawBars(true);
+                break;
+        };
+    }
+    fc++;
 }
 
 
@@ -53,6 +64,23 @@ float Graphics::normalize(uint16_t val, uint16_t mini, uint16_t maxi){
     return (float)(val - mini) / (float)(maxi - mini);
 }
 
+    //ways to visualize the buffer
+
+void Graphics::drawLine(bool bt){
+    static int16_t prev_b = bt ? btBuffer[0] : buffer[0];
+    tft.drawFastVLine(0, 0, h, BLACK);
+    tft.drawFastVLine(1, 0, h, BLACK);
+    for(int i=1; i<w; i++){
+        //reset screen in front of current index
+        if(i<w-1){tft.drawFastVLine(i+1, 0, h, BLACK);}
+        //draw line behind current index to index
+        int16_t b = bt ? (btBuffer[i]==0?1:btBuffer[i]) : (buffer[i]==0?1:buffer[i]);
+        b = h-b;    //vertical flip
+        tft.drawLine(i-1, prev_b, i, b, mainColour);
+        prev_b = b;
+    }
+}
+
 void Graphics::drawCentred(bool bt){
     //draws contents of the buffer[] to the screen
     for(int i=0; i<w; i++){
@@ -61,6 +89,15 @@ void Graphics::drawCentred(bool bt){
         tft.drawFastVLine(i, 0, rim, BLACK);
         tft.drawFastVLine(i, rim, b, mainColour);
         tft.drawFastVLine(i, h-rim, rim, BLACK);
+    }
+}
+
+void Graphics::drawBars(bool bt){
+    for(int i=0; i<w; i++){
+        int16_t b = bt ? (btBuffer[i]==0?1:btBuffer[i]) : (buffer[i]==0?1:buffer[i]);
+        b = h - b;
+        tft.drawFastVLine(i, 0, b, BLACK);
+        tft.drawFastVLine(i, b, h-b, mainColour);
     }
 }
 

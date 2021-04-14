@@ -64,6 +64,10 @@ body{
     height: 100px;
     overflow: visible;
 }
+#connectionWrapper{
+    display: flex;
+    margin-top: 5px;
+}
 #connectionIndicator{
     margin: 20px;
     margin-right: 50px;
@@ -77,6 +81,7 @@ body{
 .selector{
     -webkit-app-region: no-drag;
     max-height: 36px;
+    height: 36px;
     padding: 4px;
     background: #EEEEEE;
     font-family: RobotoMonoLight;
@@ -146,7 +151,7 @@ html {
     -webkit-app-region: no-drag;
     -webkit-appearance: none;
     outline: medium;
-    margin: 15px 0 15px 0;
+    margin: 15px 0 25px 0;
     width: 100%;
     height: 4px;
     background: linear-gradient(to right,hsl(0,100%,50%),hsl(60,100%,50%),hsl(120,100%,50%),hsl(180,100%,50%),hsl(240,100%,50%),hsl(300,100%,50%),hsl(360,100%,50%));

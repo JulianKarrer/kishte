@@ -26,9 +26,12 @@ class Graphics
 
       float normalize(uint16_t val, uint16_t mini, uint16_t maxi);
       void drawCentred(bool bt);
+      void drawLine(bool bt);
+      void drawBars(bool bt);
       void getEnvelope();
 };
 
 extern uint32_t mainColour;
+extern uint16_t drawMethod;
 
 #endif

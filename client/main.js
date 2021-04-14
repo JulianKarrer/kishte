@@ -7,8 +7,8 @@ const midi = require("easymidi")
 let win;
 function createWindow () {
     win = new BrowserWindow({
-        width: 675,
-        height: 480,
+        width: 725,
+        height: 510,
         frame: false,
         icon:"./resources/icon.png",
         title: "KISTHE",
@@ -73,7 +73,11 @@ ipcMain.handle('connect', (event, ...args) => {
 let portname = "COM5";
 ipcMain.on('getPorts', (event, arg) => {
     SerialPort.list().then(function (data) {
-        event.sender.send('getPorts_reply', data)
+        let reply = []
+        for (var entry of data) {
+            reply.push(entry.path)
+        }
+        event.sender.send('getPorts_reply', reply)
     })
 })
 
@@ -179,8 +183,25 @@ ipcMain.on('setColour', (event, arg) => {
     event.sender.send('setColour_reply', reply)
 })
 
+//manage draw style selector
+const SET_DRAWSTYLE_LINE = new Uint8Array([202]);
+const SET_DRAWSTYLE_CENTRE = new Uint8Array([203]);
+const SET_DRAWSTYLE_BAR = new Uint8Array([204]);
+ipcMain.handle('setDrawStyle', (event, arg) => {
+    switch (arg) {
+        case "line":
+            writeToPort(SET_DRAWSTYLE_LINE);
+            break;
+        case "centred":
+            writeToPort(SET_DRAWSTYLE_CENTRE);
+            break;
+        case "bar":
+            writeToPort(SET_DRAWSTYLE_BAR);
+            break;
+    }
+})
 
-//manage possible midi outputs
+//manage available midi outputs
 const midiout = new midi.Output("LoopBe Internal MIDI 1");
 
 ipcMain.on('getMidiOuts', (event, arg) => {
