@@ -107,7 +107,9 @@ The sketch should be well documented enough for you to make changes to the pins 
 Complie and upload the sketch to your ESP32.
 
 Fun fact: when using Bluetooth, some of the ADCs are used internally to process the signals and we are supposed to have less ADCs available to us. After much frustration, i found that this can for some reason be circumvented by using `adc2_config_channel_atten` and `adc2_get_raw` on a "Pin 0" which I'm not even sure physically exists. I don't know exactly why this works but it doesn't seem to have noticeable repercussions, so we can use 9 Knobs AND Bluetooth! If you have any idea why this hack works, let me know
+
 7. See if it works
+
 Congratulations, you have built a MIDI Controller!
 # Modifying the software
 
@@ -120,3 +122,7 @@ The client app in [/client](https://github.com/JulianKarrer/kishte/tree/origin/c
 2. Start the application with `yarn start` or modify the source code for the backend in `main.js`, the frontend in `renderer.js` or change `index.html` and `index.css` to change the look of the app.
 
 3. Use `yarn dist` to generate an updated executable
+
+# License
+
+You are free to use all the code, schematics, instructions and executables in this repository for your own projects under the MIT license attached. 
