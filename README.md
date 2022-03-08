@@ -1,12 +1,11 @@
 # KISHTE 
 <p align="center">
-<img  src="https://user-images.githubusercontent.com/11961803/157147705-f8da5031-5f54-4704-855e-8aafa62f90d9.png" width="100"  height="100"> 
+<img  src="https://user-images.githubusercontent.com/11961803/157150490-a9f107fa-cc3c-4d26-b643-3f46f077706a.png" width="100"  height="100"> 
 </p>
 
 An ESP32 with a small LCD display can be used to make a basic, battery powered, wireless MIDI Controller to satisfy your DJ and music production needs.
 
-This project comes with a cross-platform companion app built with Electron that receives the Bluetooth signals sent by the Kishte and converts them into MIDI commands for a virtual MIDI cable (like [Hairless Midi Serial](https://projectgus.github.io/hairless-midiserial/)) while sending a visualisation of the waveform currently playing on the computer back to the device for display.
-
+This project comes with a cross-platform companion app built with Electron that receives the Bluetooth signals sent by the Kishte and converts them into MIDI commands for a virtual MIDI cable (like [LoopBe1](https://www.nerds.de/en/loopbe1.html)) while sending a visualisation of the waveform currently playing on the computer back to the device for display.
 
 <p align="center">
 <img  src="https://user-images.githubusercontent.com/11961803/157147009-c12e4772-004e-4625-91bc-713942c69fac.jpg" width="300">  <img  src="https://user-images.githubusercontent.com/11961803/157147006-b1d26468-d879-4f64-a5b6-9fbe14c15875.jpg" width="300"> 
@@ -76,7 +75,11 @@ Use female jumper wire connectors for the connection to the pins of the ESP32 to
 
 3. Attach the buttons to the enclosure
 
-In my case, the buttons were small but long tactile buttons that i could solder to a piece of perfboard, stick the tips of the buttons through holes in the enclosure from the inside and then glue the perfboard to the enclosure via a plastic spacer. It took a couple hours of applying pressure with a screw clamp and waiting for the glue to dry before it became robust enough to push the buttons without risking the perfboard falling off on the inside. Actually glue is not the preferred way to attach things in these projects because it is permanent, use screws or other mechanical solutions if your enclosure allows it.
+In my case, the buttons were small but long tactile buttons that i could solder to a piece of perfboard, stick the tips of the buttons through holes in the enclosure from the inside and then glue the perfboard to the enclosure via a plastic spacer. 
+
+It took a couple hours of applying pressure with a screw clamp and waiting for the glue to dry before it became robust enough to push the buttons without risking the perfboard falling off on the inside. 
+
+Actually glue is not the preferred way to attach things in these projects because it is permanent, use screws or other mechanical solutions if your enclosure allows it.
 
 4. Wire up the potentiometers
 
@@ -92,13 +95,17 @@ We attach each of these middle legs via female jumper wire connector to a ADC-en
 
 5. Attach the batteries through an ON/OFF switch to the ESP32
 
-The particular microcontroller and batteries recommended above can be set up simply by connecting all red wires and all black wires together. This puts the battery packs in parallel, charges them when the ESP32 is connected via USB-C and uses them as a power source when not plugged in. However, we also want to include a switch somewhere between our batteries and the ESP32 on either the red or black cable to cut the power supply and turn the device off and back on anytime. The microcontroller can handle cutting the power suddenly, we don't need to worry about gracefully shutting down or booting up with this design.
+The particular microcontroller and batteries recommended above can be set up simply by connecting all red wires and all black wires together. This puts the battery packs in parallel, charges them when the ESP32 is connected via USB-C and uses them as a power source when not plugged in. 
+
+However, we also want to include a switch somewhere between our batteries and the ESP32 on either the red or black cable to cut the power supply and turn the device off and back on anytime. The microcontroller can handle cutting the power suddenly, we don't need to worry about gracefully shutting down or booting up with this design.
 
 6. Attach your ESP32 and upload the software
 
 Open the `kishte.ino` sketch in the `/kishte` directory using an Arduino IDE and install any libraries you might be missing in order to get it to compile (eg. `TFT_eSPI` might need to be [installed](https://github.com/Bodmer/TFT_eSPI))
 The sketch should be well documented enough for you to make changes to the pins used or change the arrangements of knobs and buttons easily.
-Upload the sketch to your Arduino.
+
+Complie and upload the sketch to your ESP32.
+
 Fun fact: when using Bluetooth, some of the ADCs are used internally to process the signals and we are supposed to have less ADCs available to us. After much frustration, i found that this can for some reason be circumvented by using `adc2_config_channel_atten` and `adc2_get_raw` on a "Pin 0" which I'm not even sure physically exists. I don't know exactly why this works but it doesn't seem to have noticeable repercussions, so we can use 9 Knobs AND Bluetooth! If you have any idea why this hack works, let me know
 7. See if it works
 Congratulations, you have built a MIDI Controller!
