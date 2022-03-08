@@ -202,10 +202,10 @@ ipcMain.handle('setDrawStyle', (event, arg) => {
 })
 
 //manage available midi outputs
-const midiout = new midi.Output("LoopBe Internal MIDI 1");
+const midiout = new midi.Output("Virtual Midi Output", true);
 
 ipcMain.on('getMidiOuts', (event, arg) => {
-    event.sender.send('getMidiOuts_reply', [...midi.getOutputs()].reverse()) //non-destrucitve
+    event.sender.send('getMidiOuts_reply', [...midi.getOutputs()].reverse()) //non-destructive
 })
 
 ipcMain.handle('setMidi', (event, arg) => {
