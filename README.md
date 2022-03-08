@@ -39,7 +39,7 @@ Midi Controllers are easy to build and expensive to buy, making them perfect for
 	+ These are used as voltage dividers so the resistance doesn't matter much as long as it is not too small, 100k-500k Ohm linear potentiometers were used here. The lower the resistance, the more current will flow across the Potentiometer needlessly, draining the battery and potentially damaging the circuit.
 + 8 tactile push buttons
 + 8 LEDs
-	+ any Diodes may be used instead, the LEDs just make it glow nicely in the dark and are unproblematic in terms of current drawn from the ESP32
+	+ any diodes may be used instead, the LEDs just make it glow nicely in the dark and are unproblematic in terms of current drawn from the ESP32
 + 1 tactile switch for power OFF/ON
 + Rechargable battery packs
 	+ 2x 3.7V 650mAh LiPo batteries in parallel were used in this case
@@ -47,7 +47,7 @@ Midi Controllers are easy to build and expensive to buy, making them perfect for
 	+ Using the female jumper wires normally used for breadboarding will make it easier to detach, reattach and reconfigure cables to the pins of your microcontroller
 + An enclosure
 	+ A random acrylic box with holes drilled and melted in was used here but anything from a cardboard box to a custom 3D printed enclosure will do
-+ Potentially: Perfboard to mount the buttons on and then attach to the inside of the box with the tips of the buttons poking through holes in the enclosure- this depends on what type of switches you have and how you plan on mounting them to the enclosure
++ Potentially: Perfboard to mount the buttons on and then attach to the inside of the box with the tips of the buttons poking through holes in the enclosure- this depends on what type of buttons you have and how you plan on mounting them to the enclosure
 
 Tools:
 
@@ -63,19 +63,19 @@ The most practical order of these steps may depend on your materials used, just 
 
 1. Attach the potentiometers to the enclosure
 
-In my case, this was a case of drilling holes of matching sizes into the acrylic box (drill on high speeds with little pressure for acrylic!). The potentiometers could then be fixed to the holes by tightening a hex nut on the opposite side of the enclosure.
+In my case, this meant drilling holes of matching sizes into the acrylic box (drill on high speeds with little pressure for acrylic!). The potentiometers could then be fixed to the holes by tightening a hex nut on the opposite side of the enclosure.
 
 2. Create the button matrix
 
 The button matrix is shown in the schematic. Just look up which pins of your buttons to use and wire them up as shown, using solder to make connections. As mentioned before, LEDs may be replaced with normal diodes but the current drawn by the LEDs doesn't matter much in terms of power consumption because the buttons are typically only pressed for short durations and the current drawn even if multiple buttons are pressed is less than the ESP32 can comfortably provide.
 
-This schematic actually uses an inefficient layout, a 3x3 Matrix is more GPIO-pin efficient in comparison. However, for spatial and practical reasons 8 buttons were all i cared about for this project. Feel free to read up [guides](https://learn.sparkfun.com/tutorials/button-pad-hookup-guide/all) on how button matrices can reduce the amount of GPIO pins used and adjust the design to your needs.
+This schematic actually uses an inefficient layout, a 3x3 Matrix is more GPIO-pin efficient in comparison. However, for spatial and practical reasons 8 buttons were all I cared about for this project. Feel free to read up [guides](https://learn.sparkfun.com/tutorials/button-pad-hookup-guide/all) on how button matrices can reduce the amount of GPIO pins used and adjust the design to your needs.
 
 Use female jumper wire connectors for the connection to the pins of the ESP32 to make the setup more easily rewireable.
 
 3. Attach the buttons to the enclosure
 
-In my case, the buttons were small but long tactile buttons that i could solder to a piece of perfboard, stick the tips of the buttons through holes in the enclosure from the inside and then glue the perfboard to the enclosure via a plastic spacer. 
+In my case, the buttons were small but long tactile buttons that i could solder to a piece of perfboard, stick the tips of the buttons through holes in the enclosure from the inside and then glue the perfboard to the enclosure with a plastic spacer. 
 
 It took a couple hours of applying pressure with a screw clamp and waiting for the glue to dry before it became robust enough to push the buttons without risking the perfboard falling off on the inside. 
 
@@ -118,3 +118,5 @@ The client app in [/client](https://github.com/JulianKarrer/kishte/tree/origin/c
 1. If you have not installed NodeJS and Yarn yet, do so. Use `yarn install` in the /client directory to install required packages. You might have to use `$(npm bin)/electron-rebuild` or `.\node_modules\.bin\electron-rebuild.cmd` on Windows to adjust the packages to the version of Node on your system.
 
 2. Start the application with `yarn start` or modify the source code for the backend in `main.js`, the frontend in `renderer.js` or change `index.html` and `index.css` to change the look of the app.
+
+3. Use `yarn dist` to generate an updated executable
