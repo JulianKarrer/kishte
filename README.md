@@ -1,10 +1,20 @@
-# KISTHE
-
-<img  src="https://raw.githubusercontent.com/JulianKarrer/kishte/origin/client/resources/icon.png?token=GHSAT0AAAAAABRWBOUQJKRB27QLG24MSUXQYRFPUMQ"  width="100"  height="100">
+# KISHTE 
+<p align="center">
+<img  src="https://user-images.githubusercontent.com/11961803/157147705-f8da5031-5f54-4704-855e-8aafa62f90d9.png" width="100"  height="100"> 
+</p>
 
 An ESP32 with a small LCD display can be used to make a basic, battery powered, wireless MIDI Controller to satisfy your DJ and music production needs.
 
 This project comes with a cross-platform companion app built with Electron that receives the Bluetooth signals sent by the Kishte and converts them into MIDI commands for a virtual MIDI cable (like [Hairless Midi Serial](https://projectgus.github.io/hairless-midiserial/)) while sending a visualisation of the waveform currently playing on the computer back to the device for display.
+
+
+<p align="center">
+<img  src="https://user-images.githubusercontent.com/11961803/157147009-c12e4772-004e-4625-91bc-713942c69fac.jpg" width="300">  <img  src="https://user-images.githubusercontent.com/11961803/157147006-b1d26468-d879-4f64-a5b6-9fbe14c15875.jpg" width="300"> 
+</p>
+
+<p align="center">
+<img  src="https://user-images.githubusercontent.com/11961803/157148351-6323e160-5fe5-4966-81b6-229a99e07c02.png" width="500"> 
+</p>
 
 ## Features
 
@@ -27,24 +37,24 @@ Midi Controllers are easy to build and expensive to buy, making them perfect for
 
 + TTGO T-Dispay ESP32 with 1.14inch LCD display ([see the repo here](https://github.com/Xinyuan-LilyGO/TTGO-T-Display))
 + 9 potentiometers
-+ These are used as voltage dividers so the resistance doesn't matter much as long as it is not too small, 100k-500k Ohm linear potentiometers were used here. The lower the resistance, the more current will flow across the Potentiometer needlessly, draining the battery and potentially damaging the circuit.
+	+ These are used as voltage dividers so the resistance doesn't matter much as long as it is not too small, 100k-500k Ohm linear potentiometers were used here. The lower the resistance, the more current will flow across the Potentiometer needlessly, draining the battery and potentially damaging the circuit.
 + 8 tactile push buttons
 + 8 LEDs
-+ any Diodes may be used instead, the LEDs just make it glow nicely in the dark and are unproblematic in terms of current drawn from the ESP32
+	+ any Diodes may be used instead, the LEDs just make it glow nicely in the dark and are unproblematic in terms of current drawn from the ESP32
 + 1 tactile switch for power OFF/ON
 + Rechargable battery packs
-+ 2x 3.7V 650mAh LiPo batteries in parallel were used in this case
+	+ 2x 3.7V 650mAh LiPo batteries in parallel were used in this case
 + A bunch of cables
-+ Using the female jumper wires normally used for breadboarding will make it easier to detach, reattach and reconfigure cables to the pins of your microcontroller
+	+ Using the female jumper wires normally used for breadboarding will make it easier to detach, reattach and reconfigure cables to the pins of your microcontroller
 + An enclosure
-+ A random acrylic box with holes drilled and melted in was used here but anything from a cardboard box to a custom 3D printed enclosure will do
+	+ A random acrylic box with holes drilled and melted in was used here but anything from a cardboard box to a custom 3D printed enclosure will do
 + Potentially: Perfboard to mount the buttons on and then attach to the inside of the box with the tips of the buttons poking through holes in the enclosure- this depends on what type of switches you have and how you plan on mounting them to the enclosure
 
 Tools:
 
 + Any soldering iron and solder
 + Glue and a drill
-+ .. or anything else you need to attach things to the enclosure of your choice
+	+ .. or anything else you need to attach things to the enclosure of your choice
 
 ## Building the hardware
 
